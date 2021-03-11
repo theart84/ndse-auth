@@ -1,0 +1,79 @@
+<form method="POST" enctype="multipart/form-data">
+  <div class="form-group">
+    <label for="inputTitle">Заголовок</label>
+    <input
+      type="text"
+      value="<%= book.title %>"
+      name="title"
+      class="form-control"
+      id="inputTitle"
+    />
+  </div>
+  <div class="form-group">
+    <label for="inputDescription">Описание</label>
+    <input
+      type="text"
+      value="<%= book.description %>"
+      name="description"
+      class="form-control"
+      id="inputDescription"
+    />
+  </div>
+
+  <div class="form-group">
+    <label for="inputAuthors">Автор</label>
+    <input
+      type="text"
+      value="<%= book.authors %>"
+      name="authors"
+      class="form-control"
+      id="inputAuthors"
+    />
+  </div>
+
+  <div class="form-group">
+    <label for="inputFavorites">Понравилось</label>
+    <input
+      type="text"
+      value="<%= book.favorite %>"
+      name="favorite"
+      class="form-control"
+      id="inputFavorites"
+    />
+  </div>
+
+  <div class="form-group">
+    <label for="inputFileCover">Обложка</label>
+    <input
+      type="text"
+      value="<%= book.fileCover %>"
+      name="fileCover"
+      class="form-control"
+      id="inputFileCover"
+    />
+  </div>
+
+  <div class="form-group">
+    <label for="inputFileName">Имя файла книги</label>
+    <input
+      type="text"
+      value="<%= book.fileName %>"
+      name="fileName"
+      class="form-control"
+      id="inputFileName"
+    />
+  </div>
+
+  <div class="form-group">
+    <label for="inputFileName">Файл книги</label>
+    <input
+      type="file"
+      class="form-control"
+      id="inputFileName"
+      name="filebook"
+    />
+  </div>
+  <div class="form-group text-right">
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+  </div>
+</form>

@@ -1,0 +1,15 @@
+<%- include('./partials/layout-start', {title: title}) %> <%- include('./partials/menu') %>
+
+<h1 class="mb-3">Книга: <%= book.title %></h1>
+
+<div class="card">
+  <div class="card-body">
+    <%- include('./partials/form', {
+      title,
+      book
+    }) %> 
+  </div>
+  </div>
+</div>
+
+<%- include('./partials/layout-end') %>

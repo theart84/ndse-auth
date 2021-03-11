@@ -1,0 +1,24 @@
+<%- include('./partials/layout-start', {title: title}) %> <%- include('./partials/menu') %>
+
+<h1 class="mb-3">Книга: <%= book.title %></h1>
+
+<div class="card">
+  <div class="card-body">
+    <p>Автор: <%= book.authors %></p>
+    <p>Описание: <%= book.description%></p>
+    <p>Понравилась: <%= book.favorite%></p>
+    <p>Скачать книгу: <a href="/books/<%= book.id %>/download">скачать</p>
+    <div class="text-right">
+      <a class="btn btn-sm btn-primary" href="/books/update/<%= book.id %>">
+          <i class="fa fa-pencil" aria-hidden="true"></i>
+      </a>
+      <form action="/books/delete/<%= book.id %>" method="POST" class="d-inline">
+          <button class="btn btn-sm btn-danger">
+              <i class="fa fa-trash" aria-hidden="true"></i>
+          </button>
+      </form>
+  </div>
+  </div>
+</div>
+
+<%- include('./partials/layout-end') %>
