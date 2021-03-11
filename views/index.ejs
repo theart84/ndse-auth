@@ -1,4 +1,4 @@
-<%- include('./partials/layout-start', {title: title}) %> <%- include('./partials/menu') %>
+<%- include('./partials/layout-start', {title: title}) %> <%- include('./partials/menu', {isLogin: isLogin}) %>
 
 <h1><%= title %></h1>
 <a class="btn btn-sm btn-primary mb-4" href="/books/create">Добавить книгу</a>

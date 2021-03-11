@@ -6,6 +6,7 @@ class BooksController {
     const data = await Book.find();
     res.render('index', {
       title: 'Главная',
+      isLogin: false,
       books: data,
     });
   }
@@ -14,7 +15,6 @@ class BooksController {
     const {id} = req.params;
     const book = await Book.findById(id);
     console.log(book)
-    // const counter = await updateCounter(id);
     if (book) {
       res.render('view', {
         title: 'Главная',
