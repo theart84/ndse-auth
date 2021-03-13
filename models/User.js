@@ -13,6 +13,10 @@ const userSchema = new Schema({
   username: {
     type: String,
     required: true
+  },
+  sessionID: {
+    type: String,
+    default: ''
   }
 }, {timestamps: true});
 

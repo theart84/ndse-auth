@@ -3,7 +3,7 @@ const BooksController = require('../controllers/BooksController');
 const fileMiddleware = require('../middleware/file');
 const router = express.Router();
 
-router.get('/', BooksController.getBooks) // роут для главной страницы
+router.get('/main', BooksController.getBooks) // роут для главной страницы
 router.get('/books/view/:id', BooksController.getBook); // роут для просмотра книги по id
 router.get('/books/create', BooksController.createBookGet); // роут для получения страницы для создания книги
 router.post('/books/create', fileMiddleware.single('filebook'), BooksController.createBookPost); // роут для отправки запроса на создание книги

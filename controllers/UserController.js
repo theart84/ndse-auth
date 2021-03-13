@@ -28,31 +28,12 @@ class UserController {
     })
   }
   async loginPOST(req, res) {
-    const candidate = await User.findOne({email: req.body.email});
-    if (candidate) {
-      const isValidPassword = bcrypt.compareSync(req.body.password, candidate.password);
-      if (isValidPassword) {
-        const data = await Book.find();
-        if (data) {
-          res.render('index', {
-            title: 'Главная',
-            isLogin: true,
-            books: data
-          });
-        }
-      } else {
-        res.render('signin', {
-          title: 'Sign In',
-          errorLogin: true
-        })
-      }
-    } else {
-      res.render('signin', {
-        title: 'Sign In',
-        errorLogin: true
-      })
+    console.log(req.session)
+    const id = req.session.passport.user
+    await User.findByIdAndUpdate(id, {sessionID: req.sessionID})
+    if (req.user) {
+      res.status(200).redirect('/main');
     }
-
   }
 
   async singupPOST(req, res) {
