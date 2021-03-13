@@ -5,9 +5,11 @@ const passport = require('passport');
 
 router.get('/login',UserController.loginGET);
 router.get('/signup', UserController.singupGET);
+router.get('/logout', UserController.logout);
 router.get('/me', UserController.getProfile);
-router.post('/login',passport.authenticate('local', {failureRedirect: '/login'}), UserController.loginPOST);
+router.post('/login',passport.authenticate('local', {failureRedirect: 'login'}), UserController.loginPOST);
 router.post('/signup', UserController.singupPOST);
+
 
 
 module.exports = router;

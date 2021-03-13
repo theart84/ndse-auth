@@ -16,6 +16,8 @@ const verify = async (email, password, done)=> {
    if (user) {
      const isValidPassword =  bcrypt.compareSync(password, user.password);
      isValidPassword ? done(null, user) : done(null, false)
+   } else {
+     done(null, false)
    }
  } catch (e) {
    console.log(e)

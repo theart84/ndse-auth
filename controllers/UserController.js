@@ -1,6 +1,5 @@
 const bcrypt = require('bcryptjs');
 const User = require('../models/User');
-const Book = require('../models/Book')
 
 class UserController {
   async loginGET(req, res) {
@@ -19,16 +18,29 @@ class UserController {
   }
 
   async getProfile(req, res) {
-    const candidate = await User.findOne({email: 'demo@demo'});
-    console.log(candidate)
-    res.render('account', {
-      title: 'Account',
-      user: candidate,
-      isLogin: true,
-    })
+    const isLogin = !!await User.findOne({sessionID: req.sessionID}).select('sessionID')
+    if (isLogin) {
+      const id = req.session.passport.user
+      const candidate = await User.findOne({_id: id});
+      res.render('account', {
+        title: 'Account',
+        user: candidate,
+        isLogin: true,
+      })
+    } else {
+      res.redirect('/');
+    }
   }
   async loginPOST(req, res) {
-    console.log(req.session)
+    // const isSuccess = req.session.passport.success
+    // if (isSuccess) {
+    //   res.render('signin', {
+    //     title: 'Sign In',
+    //     isLogin: false,
+    //     errorLogin: true
+    //   })
+    // }
+    console.log(req)
     const id = req.session.passport.user
     await User.findByIdAndUpdate(id, {sessionID: req.sessionID})
     if (req.user) {
@@ -65,8 +77,12 @@ class UserController {
         res.status(404).redirect('error/404');
       }
     }
+  }
 
-
+  async logout(req, res) {
+    const id = req.session.passport.user
+    await User.findByIdAndUpdate(id, {sessionID: ''})
+    res.redirect('/')
   }
 }
 

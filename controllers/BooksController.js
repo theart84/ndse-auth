@@ -10,7 +10,7 @@ class BooksController {
       res.setHeader('Content-Type', 'text/html')
       res.render('index', {
         title: 'Главная',
-        isLogin: false,
+        isLogin: true,
         books: data,
       });
     } else {
@@ -23,7 +23,6 @@ class BooksController {
     if (isLogin) {
       const {id} = req.params;
       const book = await Book.findById(id);
-      console.log(book)
       if (book) {
         res.render('view', {
           title: 'Главная',
