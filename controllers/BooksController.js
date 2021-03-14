@@ -4,8 +4,8 @@ const path = require("path");
 
 class BooksController {
   async getBooks(req, res) {
-    const isLogin = !!await User.findOne({sessionID: req.sessionID}).select('sessionID')
-    if (isLogin) {
+    const isAuth = !!await User.findOne({sessionID: req.sessionID}).select('sessionID')
+    if (isAuth) {
       const data = await Book.find();
       res.setHeader('Content-Type', 'text/html')
       res.render('index', {
@@ -19,8 +19,8 @@ class BooksController {
   }
 
   async getBook(req, res) {
-    const isLogin = !!await User.findOne({sessionID: req.sessionID}).select('sessionID')
-    if (isLogin) {
+    const isAuth = !!await User.findOne({sessionID: req.sessionID}).select('sessionID')
+    if (isAuth) {
       const {id} = req.params;
       const book = await Book.findById(id);
       if (book) {
@@ -37,8 +37,8 @@ class BooksController {
   }
 
   async createBookGet(req, res) {
-    const isLogin = !!await User.findOne({sessionID: req.sessionID}).select('sessionID')
-    if (isLogin) {
+    const isAuth = !!await User.findOne({sessionID: req.sessionID}).select('sessionID')
+    if (isAuth) {
       res.render('create', {
         title: 'Главная',
         book: [],
@@ -49,8 +49,8 @@ class BooksController {
   }
 
   async createBookPost(req, res) {
-    const isLogin = !!await User.findOne({sessionID: req.sessionID}).select('sessionID')
-    if (isLogin) {
+    const isAuth = !!await User.findOne({sessionID: req.sessionID}).select('sessionID')
+    if (isAuth) {
       const {title, description, authors, favorite, fileCover, fileName} = req.body;
       let fileBook = '';
       if (req.file) {
@@ -78,8 +78,8 @@ class BooksController {
   }
 
   async updateBookGet(req, res) {
-    const isLogin = !!await User.findOne({sessionID: req.sessionID}).select('sessionID')
-    if (isLogin) {
+    const isAuth = !!await User.findOne({sessionID: req.sessionID}).select('sessionID')
+    if (isAuth) {
       const {title, description, authors, favorite, fileCover, fileName} = req.body;
       const {id} = req.params;
       const book = await Book.findById(id);
@@ -98,8 +98,8 @@ class BooksController {
   }
 
   async updateBookPost(req, res) {
-    const isLogin = !!await User.findOne({sessionID: req.sessionID}).select('sessionID')
-    if (isLogin) {
+    const isAuth = !!await User.findOne({sessionID: req.sessionID}).select('sessionID')
+    if (isAuth) {
       const {id} = req.params;
       const findBook = await Book.findById(id)
       let fileBook = '';
@@ -120,8 +120,8 @@ class BooksController {
   }
 
   async deleteBook(req, res) {
-    const isLogin = !!await User.findOne({sessionID: req.sessionID}).select('sessionID')
-    if (isLogin) {
+    const isAuth = !!await User.findOne({sessionID: req.sessionID}).select('sessionID')
+    if (isAuth) {
       const {id} = req.params;
       await Book.deleteOne({_id: id})
       res.status(200).redirect('/main');
@@ -131,8 +131,8 @@ class BooksController {
   }
 
   async downloadBook(req, res) {
-    const isLogin = !!await User.findOne({sessionID: req.sessionID}).select('sessionID')
-    if (isLogin) {
+    const isAuth = !!await User.findOne({sessionID: req.sessionID}).select('sessionID')
+    if (isAuth) {
       const {id} = req.params;
       const book = await Book.findById(id).select('-__v');
       if (book) {

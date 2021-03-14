@@ -7,14 +7,15 @@ class UserController {
       title: 'Sign In',
       isLogin: false,
       errorLogin: false
-    })
+    });
   }
 
   singupGET(req, res) {
       res.render('signup', {
         title: 'Sign Up',
         isLogin: false,
-      })
+        errorSignup: false
+      });
   }
 
   async getProfile(req, res) {
@@ -32,15 +33,6 @@ class UserController {
     }
   }
   async loginPOST(req, res) {
-    // const isSuccess = req.session.passport.success
-    // if (isSuccess) {
-    //   res.render('signin', {
-    //     title: 'Sign In',
-    //     isLogin: false,
-    //     errorLogin: true
-    //   })
-    // }
-    console.log(req)
     const id = req.session.passport.user
     await User.findByIdAndUpdate(id, {sessionID: req.sessionID})
     if (req.user) {
@@ -53,11 +45,11 @@ class UserController {
       email: req.body.email
     })
     if (candidate) {
-      const response = {
-        success: false,
-        message: 'This user already exists.'
-      }
-      res.status(409).send(JSON.stringify(response))
+      res.render('signup', {
+        title: 'Sign Up',
+        isLogin: false,
+        errorSignup: true
+      });
     } else {
       const salt = bcrypt.genSaltSync(10);
       const password = req.body.password;
@@ -66,10 +58,6 @@ class UserController {
         username: req.body.username,
         password: bcrypt.hashSync(password, salt)
       });
-      const response = {
-        success: true,
-        message: 'User was created successfully!'
-      }
       try {
         await newUser.save()
         res.status(200).redirect('/api/user/login')
