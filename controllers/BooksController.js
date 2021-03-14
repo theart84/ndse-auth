@@ -4,23 +4,20 @@ const path = require("path");
 
 class BooksController {
   async getBooks(req, res) {
-    const isAuth = !!await User.findOne({sessionID: req.sessionID}).select('sessionID')
-    if (isAuth) {
+    if (req.isAuth) {
       const data = await Book.find();
-      res.setHeader('Content-Type', 'text/html')
       res.render('index', {
         title: 'Главная',
         isLogin: true,
         books: data,
       });
     } else {
-      res.redirect('/');
+      res.redirect('/')
     }
   }
 
   async getBook(req, res) {
-    const isAuth = !!await User.findOne({sessionID: req.sessionID}).select('sessionID')
-    if (isAuth) {
+    if (req.isAuth) {
       const {id} = req.params;
       const book = await Book.findById(id);
       if (book) {
@@ -31,14 +28,11 @@ class BooksController {
       } else {
         res.status(404).redirect('error/404');
       }
-    } else {
-      res.redirect('/');
     }
   }
 
   async createBookGet(req, res) {
-    const isAuth = !!await User.findOne({sessionID: req.sessionID}).select('sessionID')
-    if (isAuth) {
+    if (req.isAuth) {
       res.render('create', {
         title: 'Главная',
         book: [],
@@ -46,11 +40,11 @@ class BooksController {
     } else {
       res.redirect('/');
     }
+
   }
 
   async createBookPost(req, res) {
-    const isAuth = !!await User.findOne({sessionID: req.sessionID}).select('sessionID')
-    if (isAuth) {
+    if (req.isAuth) {
       const {title, description, authors, favorite, fileCover, fileName} = req.body;
       let fileBook = '';
       if (req.file) {
@@ -74,12 +68,10 @@ class BooksController {
     } else {
       res.redirect('/');
     }
-
   }
 
   async updateBookGet(req, res) {
-    const isAuth = !!await User.findOne({sessionID: req.sessionID}).select('sessionID')
-    if (isAuth) {
+    if (req.isAuth) {
       const {title, description, authors, favorite, fileCover, fileName} = req.body;
       const {id} = req.params;
       const book = await Book.findById(id);
@@ -91,15 +83,11 @@ class BooksController {
       } else {
         res.status(404).redirect('error/404');
       }
-    } else {
-      res.redirect('/');
     }
-
   }
 
   async updateBookPost(req, res) {
-    const isAuth = !!await User.findOne({sessionID: req.sessionID}).select('sessionID')
-    if (isAuth) {
+    if (req.isAuth) {
       const {id} = req.params;
       const findBook = await Book.findById(id)
       let fileBook = '';
@@ -114,25 +102,19 @@ class BooksController {
       } else {
         res.status(404).redirect('error/404');
       }
-    } else {
-      res.redirect('/');
     }
   }
 
   async deleteBook(req, res) {
-    const isAuth = !!await User.findOne({sessionID: req.sessionID}).select('sessionID')
-    if (isAuth) {
+    if (req.isAuth) {
       const {id} = req.params;
       await Book.deleteOne({_id: id})
       res.status(200).redirect('/main');
-    } else {
-      res.redirect('/');
     }
   }
 
   async downloadBook(req, res) {
-    const isAuth = !!await User.findOne({sessionID: req.sessionID}).select('sessionID')
-    if (isAuth) {
+    if (req.isAuth) {
       const {id} = req.params;
       const book = await Book.findById(id).select('-__v');
       if (book) {
@@ -144,8 +126,6 @@ class BooksController {
           message: 'Book not found',
         });
       }
-    } else {
-      res.redirect('/');
     }
   }
 }

@@ -2,12 +2,22 @@ const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 
 class UserController {
-  async loginGET(req, res) {
-    res.render('signin', {
-      title: 'Sign In',
-      isLogin: false,
-      errorLogin: false
-    });
+  loginGET(req, res) {
+    const { error } = req.query
+    if (error === 'incorrectData') {
+      res.setHeader('Content-Type', 'text/html')
+      res.render('signin', {
+        title: 'Sign In',
+        isLogin: false,
+        errorLogin: true
+      });
+    } else {
+      res.render('signin', {
+        title: 'Sign In',
+        isLogin: false,
+        errorLogin: false
+      });
+    }
   }
 
   singupGET(req, res) {
@@ -19,8 +29,8 @@ class UserController {
   }
 
   async getProfile(req, res) {
-    const isLogin = !!await User.findOne({sessionID: req.sessionID}).select('sessionID')
-    if (isLogin) {
+    const isAuth = req.session.sessionID === req.sessionID;
+    if (isAuth) {
       const id = req.session.passport.user
       const candidate = await User.findOne({_id: id});
       res.render('account', {
@@ -32,9 +42,8 @@ class UserController {
       res.redirect('/');
     }
   }
-  async loginPOST(req, res) {
-    const id = req.session.passport.user
-    await User.findByIdAndUpdate(id, {sessionID: req.sessionID})
+  loginPOST(req, res) {
+    req.session.sessionID = req.sessionID;
     if (req.user) {
       res.status(200).redirect('/main');
     }
@@ -60,7 +69,7 @@ class UserController {
       });
       try {
         await newUser.save()
-        res.status(200).redirect('/api/user/login')
+        res.status(200).redirect('/api/user/login');
       } catch {
         res.status(404).redirect('error/404');
       }
@@ -68,9 +77,9 @@ class UserController {
   }
 
   async logout(req, res) {
-    const id = req.session.passport.user
-    await User.findByIdAndUpdate(id, {sessionID: ''})
-    res.redirect('/')
+    req.session.sessionID = '';
+    req.logOut();
+    res.redirect('/');
   }
 }
 

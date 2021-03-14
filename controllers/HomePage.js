@@ -1,15 +1,20 @@
 class HomePage {
   getHomePage(req, res) {
-    if (req.user) {
+    try {
+      const isAuth = req.session.sessionID === req.sessionID;
+      if (isAuth) {
+        res.redirect('/main')
+      } else {
+        res.render('home', {
+          title: 'Главная',
+          user: false,
+          isLogin: false,
+        });
+      }
+    } catch {
       res.render('home', {
         title: 'Главная',
         user: false,
-        isLogin: false,
-      });
-    } else {
-      res.render('home', {
-        title: 'Главная',
-        user: true,
         isLogin: false,
       });
     }

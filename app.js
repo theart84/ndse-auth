@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const loggerMiddleware = require('./middleware/logger');
 const errorMiddleware = require('./middleware/error');
+const isAuth = require('./middleware/isAuth')
 const booksRouter = require('./routes/books');
 const booksRouterAPI = require('./routes/booksAPI');
 const userController = require('./routes/user');
@@ -34,6 +35,7 @@ app.use(loggerMiddleware);
 app.use(passport.initialize());
 require('./middleware/passportLocal')(passport)
 app.use(passport.session());
+app.use(isAuth);
 app.use('/api/user', userController);
 app.use('/api', booksRouterAPI);
 app.use('/', homeRouter)
