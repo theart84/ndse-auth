@@ -12,7 +12,6 @@ const userController = require('./routes/user');
 const homeRouter = require('./routes/home');
 const passport = require('passport');
 
-
 const app = express();
 
 app.use(session({
@@ -42,5 +41,7 @@ app.use('/', homeRouter)
 app.use('/', booksRouter);
 
 app.use(errorMiddleware);
+
+
 
 module.exports = app;

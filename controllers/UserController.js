@@ -20,6 +20,16 @@ class UserController {
     }
   }
 
+  async usernameGET(req, res) {
+    const isAuth = req.session.sessionID === req.sessionID;
+    if (isAuth) {
+      const { username } = req.user
+      res.json({success: true, username})
+    } else {
+      res.json({success: false});
+    }
+  }
+
   singupGET(req, res) {
       res.render('signup', {
         title: 'Sign Up',

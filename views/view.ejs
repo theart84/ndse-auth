@@ -5,20 +5,94 @@
 <div class="card">
   <div class="card-body">
     <p>Автор: <%= book.authors %></p>
-    <p>Описание: <%= book.description%></p>
-    <p>Понравилась: <%= book.favorite%></p>
-    <p>Скачать книгу: <a href="/books/<%= book.id %>/download">скачать</p>
+    <p>Описание: <%= book.description %></p>
+    <p>Понравилась: <%= book.favorite %></p>
+    <p>Скачать книгу: <a href="/books/<%= book.id %>/download">скачать</a></p>
     <div class="text-right">
       <a class="btn btn-sm btn-primary" href="/books/update/<%= book.id %>">
-          <i class="fa fa-pencil" aria-hidden="true"></i>
+        <i class="fa fa-pencil" aria-hidden="true"></i>
       </a>
       <form action="/books/delete/<%= book.id %>" method="POST" class="d-inline">
-          <button class="btn btn-sm btn-danger">
-              <i class="fa fa-trash" aria-hidden="true"></i>
-          </button>
+        <button class="btn btn-sm btn-danger">
+          <i class="fa fa-trash" aria-hidden="true"></i>
+        </button>
       </form>
-  </div>
+    </div>
   </div>
 </div>
 
-<%- include('./partials/layout-end') %>
+<div class="card mt-5">
+  <div class="card-body">
+    <div class="chat-window border rounded"
+         style="border-color: #ced4da !important; height: 400px; padding: 15px; overflow: auto">
+    </div>
+    <form class="d-inline" id="send-message">
+      <div class="mb-3">
+        <label for="inputMessage"></label>
+        <input type="text" name="inputChat" class="form-control" id="inputMessage">
+      </div>
+      <button class="btn btn-sm btn-success text-right">
+        Send
+      </button>
+    </form>
+  </div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
+        crossorigin="anonymous"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  const socket = io.connect('/');
+  const formElement = document.forms['send-message'];
+  const inputFieldMessage = formElement.inputMessage;
+  const messageContainerElement = document.querySelector('.chat-window');
+  let currentUserName = 'Is not available';
+  (function getCurrentUser() {
+    return fetch(`http://localhost:${location.port}/api/user/username`).then((response) => response.json()).then((data) => currentUserName = data.username)
+  })();
+
+
+  function autoScroll() {
+    messageContainerElement.lastElementChild.scrollIntoView();
+  }
+
+  formElement.addEventListener('submit', (e) => {
+    e.preventDefault()
+    socket.emit('message', {
+      username: currentUserName,
+      message: inputFieldMessage.value,
+    });
+    inputFieldMessage.value = '';
+  })
+
+  const getTmp = (msg) => {
+    const date = new Date()
+    const fullDate = `${date.toLocaleDateString()} ${date.toTimeString().slice(0, 8)}`
+    return `
+      <div class="col-4 ${msg.username !== currentUserName ? 'mr-auto' : 'ml-auto'} mb-2">
+        <div class="message-container border rounded" style="border-color: #ced4da !important; padding: 15px; overflow: auto">
+          <div class="message-title d-flex justify-content-between align-content-center">
+            <h4 class="message-username">${msg.username}</h4>
+            <p>${fullDate}</p>
+          </div>
+          <div class="dropdown-divider"></div>
+          <div class="message-body">
+            <p class="message-text">${msg.message}</p>
+          </div>
+        </div>
+      </div>
+        `;
+  };
+  socket.on('message', (msg) => {
+    const template = getTmp(msg, currentUserName)
+    messageContainerElement.insertAdjacentHTML('beforeend', template);
+    autoScroll();
+  });
+</script>
+</body>
+</html>
