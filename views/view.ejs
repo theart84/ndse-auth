@@ -47,7 +47,8 @@
         crossorigin="anonymous"></script>
 <script src="/socket.io/socket.io.js"></script>
 <script>
-  const socket = io.connect('/');
+  const roomName = location.pathname.split('/').pop();
+  const socket = io.connect('/', {query: `roomName=${roomName}`});
   const formElement = document.forms['send-message'];
   const inputFieldMessage = formElement.inputMessage;
   const messageContainerElement = document.querySelector('.chat-window');
@@ -63,7 +64,7 @@
 
   formElement.addEventListener('submit', (e) => {
     e.preventDefault()
-    socket.emit('message', {
+    socket.emit('message-to-room', {
       username: currentUserName,
       message: inputFieldMessage.value,
     });
@@ -88,7 +89,7 @@
       </div>
         `;
   };
-  socket.on('message', (msg) => {
+  socket.on('message-to-room', (msg) => {
     const template = getTmp(msg, currentUserName)
     messageContainerElement.insertAdjacentHTML('beforeend', template);
     autoScroll();

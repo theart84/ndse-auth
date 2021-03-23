@@ -26,9 +26,11 @@ async function start(socketIO) {
       socket.on('disconnect', () => {
         console.log(`Socket disconnected: ${id}`);
       });
-      socket.on('message', (msg) => {
-        socket.broadcast.emit('message', msg);
-        socket.emit('message', msg);
+      const {roomName} = socket.handshake.query;
+      socket.join(roomName);
+      socket.on('message-to-room', (msg) => {
+        socket.to(roomName).emit('message-to-room', msg);
+        socket.emit('message-to-room', msg);
       });
     });
   } catch (err) {
